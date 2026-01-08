@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mustafa's-GPT</title>
+    <style>
+      :root{
+        --bg-main: linear-gradient(90deg,rgb(22,22,22),rgb(48,48,48));
+        --text-color:white;
+        --header-bg:linear-gradient(180deg,black,rgba(0,0,0,0.1));
+        --border-color: rgb(73,73,73);
+        --input-bg: rgb(54,54,54);
+        --user-msg-bg:rgb(26,26,141);
+      }
+      body.light{
+         --bg-main: #FAFBFC;
+        --text-color:#111;
+        --header-bg:linear-gradient(180deg,black,rgba(0,0,0,0.1));
+        --border-color: #ddd;
+        --user-msg-bg:rgb(26,26,141);
+      }
+      *{
+        box-sizing: border-box;
+      }
+      body{
+        margin: 0;
+        background: var(--bg-main);
+        color: var(--text-color);
+        font-family:'Segoe UI', Tahoma,sans-serif;
+        display: flex;
+        justify-content: center;
+        height: 100vh;
+      }
+      .js-container{
+       padding: 100px 20%;
+        width: 100%;
+        max-width: 100vw;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+      .header{
+        background:var(--header-bg);
+        padding: 0px 20%;
+        font-size: 20px;
+        border-bottom: 1px solid rgb(73, 73, 73);
+        height: 90px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+      }
+      .moodebtn{
+        position: absolute;
+        top: 35px;
+        right: 20%;
+      }
+      .m{
+        color: #FFFF;
+        font-size: 32px;
+      }
+      .kh{
+        color: #FFFF;
+        font-size: 25px;
+      }
+      .gpt{
+        background-color: #FFFF;
+        color: blue;
+        border-radius: 5px;
+        padding:0px 5px;
+        font-size: 25px;
+      }
+      .robot{
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        gap: 10px;
+        text-align: left;
+        padding: 5px;
+      }
+      .user{
+        display: flex;
+        align-items: center;
+        justify-content: right;
+        gap: 10px;
+        padding: 5px 10px;
+        background-color: rgb(15, 111, 255);
+        margin: 10px  0px 10px 60%;
+        border-radius: 10px;
+      }
+      .messages{
+        padding-bottom: 140px;
+      }
+      .input{
+        background: var(--input-bg);
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+        border-radius: 40px;
+        font-size: 20px;
+        padding: 15px 20px;
+        outline: none;
+        position: fixed;
+        bottom: 50px;
+        right: 20%;
+        left: 20%;
+      }
+      input{
+        font-size: 18px;
+        background-color: rgba(255,255,255,0);
+        color: var(--text-color);
+        border: none;
+        outline: none;
+        width: 90%;
+      }
+
+      .button{
+        height: 35px;
+        width: 35px;
+        border-radius: 50%;
+        border: none;
+        background-color: rgb(90, 106, 252);
+      }
+      button{
+        background-color: rgba(255,255,255,0);
+        backdrop-filter: blur(5px);
+        height: 32px;
+        width: 32px;
+        border-radius: 50%;
+        border: none;
+      }
+      button:hover{
+        transform: scale(1.1);
+      }
+      a.no-underline{
+        text-decoration: none;
+      }
+      @media (max-width: 500px) {
+        
+        .js-container{
+          padding: 100px 10%;
+        }
+        .header{
+          padding: 5px 5%;
+        }
+        .gpt{
+          padding: 2px 2px 0px 2px;
+        }
+        .moodebtn{
+          right: 5%;
+        }
+        .messages{
+          margin-top: 50px;
+        }
+        .user{
+          padding: 10px;
+          margin: 10px  0px 10px 60%;
+        }
+        .user img{
+          width: 16px;
+          height: 16px;
+        }
+        .robot{
+          max-width: 250px;
+        }
+        .input{
+          width: 94%;
+          left: 3%;
+          right: 3%;
+          bottom: 4%;
+        }
+        input{
+          font-size: 15px;
+        }
+        .button{
+          width: 40px;
+          height: 35px;
+        }
+        
+      }
+    </style>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+     <script type="text/babel">
+    //  why we us babel because it is 
+    //   comailar that translate from jsx to js
+      // jsx 
+       function ChatInput({chatMessages,setChatMessages}){
+        const [inputText,setInputText]=React.useState("");
+
+        function saveInputText(event){
+          setInputText(event.target.value);
+        }
+
+        function sendMessage(){
+          const newChatMessages = [
+                ...chatMessages,
+                {
+                  message: inputText,
+                  sender: "user", 
+                  id: crypto.randomUUID()
+                }   
+              ];
+
+          setChatMessages(newChatMessages);
+              
+              let response = Chatbot.getResponse(inputText);
+            if(inputText.toLowerCase()==="who are you"
+            ||inputText.toLowerCase()==="who are you?"||
+            inputText.toLowerCase()==="who are you "||
+            inputText.toLowerCase()==="who are you? "
+          ){
+              response="I am a Chatbot of the developer Mustafa and my name is MkhGPT";
+            }else if(inputText.toLowerCase()==="who create you"||
+            inputText.toLowerCase()==="who create you "||
+            inputText.toLowerCase()==="who created you" ||
+            inputText.toLowerCase()==="who created you "||
+            inputText.toLowerCase()==="who create you?"||
+            inputText.toLowerCase()==="who created you?"
+          ){
+              response="The web developer Mustafa Khamis, do you wan to know about him?"
+            }else if(inputText.toLowerCase()==="yes"||
+          inputText.toLowerCase()==="yes "
+        ){
+              response="Mustafa Khamis is a Full-Stack Web Developer and Software Engineer"
+            }else if(inputText.toLowerCase()==="hi"||
+            inputText.toLowerCase()==="hi "
+          ){
+              response="Hi , how can I help you"
+            }else if(inputText.toLowerCase()==="mkhgpt"||
+            inputText.toLowerCase()==="mkhgpt "
+          ){
+              response="Yes this is my name"
+            }else if(inputText.toLowerCase()==="what is your name"||
+            inputText.toLowerCase()==="what is your name?"||
+            inputText.toLowerCase()==="what is your name? "||
+            inputText.toLowerCase()==="what is your name "
+          ){
+              response="My name is MkhGPT ,how I can help you"
+            }
+            else{
+              response=Chatbot.getResponse(inputText);
+            }
+
+
+              setChatMessages([
+                ...newChatMessages,
+                {
+                  message: response,
+                  sender: "robot", 
+                  id: crypto.randomUUID()
+                }   
+              ]);
+              
+
+              setInputText('');
+        }
+        return(
+          // <> this is called a fragement
+          <>
+          <div className="inputcont">
+          <div className="input">
+            <button><img src="plus.png" alt=""></img></button>
+          <input
+             placeholder="Send a message to chatbot"
+             size="30"
+             onChange={saveInputText}
+             onKeyDown={(e)=>{
+              if(e.key==="Enter"){
+                sendMessage();
+              }
+             }}
+             value={inputText}
+             
+           />
+          <button className="button"
+          onClick={sendMessage}
+          ><img src="send.png"></img></button>
+          </div>
+          </div>
+          </>
+        );
+       }
+       
+
+       function ChatMessage({message,sender}){
+          return(
+            
+          <div className={sender === "user" ?
+            "user" : "robot"
+          }>
+            
+            {sender === "robot" && (
+              <img src="robot.png" alt="robot"/>
+            ) }
+           
+            {message}
+            
+            {sender === "user" && (
+              <img src="user.png" alt="robot"/>
+            ) }
+           
+          </div>
+        )
+       }
+
+       function ChatMessages({chatMessages}){
+          const bottomRef =React.useRef(null);
+
+           React.useEffect(()=>{
+          bottomRef.current?.scrollIntoView({behavior: "smooth"});
+        },[chatMessages]);
+
+          return(
+            <>
+             <div className="messages">
+            { chatMessages.map((chatMessage,id)=>{
+              return(
+                <ChatMessage
+                message={chatMessage.message}
+                sender={chatMessage.sender}
+                key={chatMessage.id}
+                />
+              ) ;
+              })}
+              <div 
+              ref={bottomRef}
+              className="bottomRef"
+              ></div>
+              </div>
+            </>
+          );
+       }
+ 
+        function App(){
+          const [theme,setTheme]=React.useState("dark");
+          
+
+          function toggleTheme(){
+            setTheme(prev => prev ==="dark"? "light": "dark");
+          }
+          
+          React.useEffect(()=>{
+              if(theme==="light"){
+              document.body.classList.add("light");
+              }else{
+                document.body.classList.remove("light");
+              }
+            },[theme]);
+           const [chatMessages,setChatMessages]=React.useState([{
+            
+            message: "What I can help with",
+            sender: "robot",
+            id: "id1"
+          }
+        ]);  
+          return(
+               <>
+               
+                <div class="header">
+                  <a href="https://makzomltd.github.io/Mustafa_Khamis/" className="no-underline">
+                    <h2>
+                      <span className="m">M</span><span className="kh">kh</span>
+                      <span className="gpt">GPT</span>
+                    </h2>
+                  </a>
+                  <button className="moodebtn"
+                  onClick={()=>{
+                  toggleTheme();
+
+                }}
+                   ><img src={theme==="dark"?
+                    "brightness.png": "sleep-mode.png"
+                   }  alt=""></img></button>
+                  </div>
+               <ChatMessages
+               chatMessages={chatMessages}
+                />
+
+                <ChatInput
+             chatMessages={chatMessages} 
+             setChatMessages={setChatMessages}
+             />
+            
+               </>
+          );
+        }
+
+
+      const container = document.querySelector('.js-container');
+      ReactDOM.render(<App />,container);
+    </script>
+  </body>
+</html>
