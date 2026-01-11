@@ -70,13 +70,19 @@
         padding:0px 5px;
         font-size: 25px;
       }
-      .robot{
+      .gpt:hover{
+        background-color: #e2e2e2;
+      }
+     .robot{
         display: flex;
         align-items: center;
         justify-content: left;
         gap: 10px;
         text-align: left;
         padding: 5px;
+        max-width: 400px;
+        align-self: flex-start;
+        margin: 10px 0px;
       }
       .user{
         display: flex;
@@ -84,18 +90,27 @@
         justify-content: right;
         gap: 10px;
         padding: 5px 10px;
-        margin: 10px  0px 10px 10%;
         border-radius: 10px;
+        align-self: flex-end;
+        max-width: 200px;
+      }
+       .user .message{
+        background: var(--user-msg-bg);
+        color: white;
+      }
+      .robot .message{
+        background-color: #ddd;
+        color: black;
       }
       .message{
-        background-color: #ddd;
         padding: 5px 10px;
         border-radius: 10px;
-        color: black;
-        width: 100%;
       }
       .messages{
         padding-bottom: 140px;
+        display: flex;
+        flex-direction: column;
+        justify-content: stretch;
       }
       .input{
         background: var(--input-bg);
@@ -160,6 +175,10 @@
         }
         .user{
           margin-right: -30px;
+        }
+        .user img{
+          width: 16px;
+          height: 16px;
         }
         .robot{
           max-width: 250px;
@@ -408,4 +427,3 @@
     </script>
   </body>
 </html>
-
